@@ -670,3 +670,6 @@ end)
 CreateThread(function()
     DecorRegister(FUEL_DECOR, 1)
 end)
+
+exports("GetFuel", GetFuel)
+exports("SetFuel", SetFuel)
