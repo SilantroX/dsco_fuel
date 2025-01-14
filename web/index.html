@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js" integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <div class="pumpDisplay">
+        <div class="fuelGroup">
+            <span class="fuelSymbol">$<span class="fuelCurrency">0.00</span>
+        </div>
+        <div class="fuelGroup">
+            <span class="fuelSymbol">%</span><span class="fuelPrecentage">0.00</span>
+        </div>
+    </div>
+    <div class="mainMenu">
+        <div class="fuelPrice">
+            Galon de Gasolina <span class="fuelPriceSpan">$15.00</span>
+        </div>
+        <h1>Gasolinera</h1>
+        <p>¡Bienvenido a nuestra estación de combustible, donde calidad y servicio van de la mano!</p>
+        <div class="menuGroup">
+            <button class="menuButton" id="fuelButton"><i id="menuIcons" class="fa-solid fa-gas-pump"></i>Tomar Manguera</button>
+            <button class="menuButton" id="jerryButton"><i id="menuIcons" class="fa-solid fa-oil-can"></i><span id="jerryButtonSpan">Comprar Bidon</span></button>
+            <button class="menuButton" id="cancelButton"><i id="menuIcons" class="fa-solid fa-right-from-bracket"></i>Salir</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
