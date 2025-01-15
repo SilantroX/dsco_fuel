@@ -1,0 +1,320 @@
+ped = nil
+pedCoords = nil
+pump = nil
+pumpHandle = nil
+veh = nil
+
+CreateThread(function()
+    while true do
+        ped = PlayerPedId()
+        pedCoords = GetEntityCoords(ped)
+        pump, pumpHandle = NearPump(pedCoords)
+        veh = GetVehiclePedIsIn(ped, true)
+        Wait(500)
+    end
+end)
+
+-- Refuel the vehicle.
+CreateThread(function()
+    while true do
+        Wait(2000)
+        if VehicleFueling then
+            local classMultiplier = Config.vehicleClasses[GetVehicleClass(VehicleFueling)]
+            if UsingCan then
+                while UsingCan do
+                    local fuel = GetFuel(VehicleFueling)
+                    if fuel < 97 then
+                        SetFuel(VehicleFueling, fuel + (2.5 / classMultiplier))
+                    else
+                        fuel = 100.0
+                        SetFuel(VehicleFueling, fuel)
+                        VehicleFueling = false
+                    end
+                    Wait(500)
+                end
+            else
+                local cost = 0
+                while VehicleFueling do
+                    local fuel = GetFuel(VehicleFueling)
+                    if not DoesEntityExist(VehicleFueling) then
+                        DropNozzle()
+                        break
+                    end
+                    fuel = GetFuel(VehicleFueling)
+                    cost = cost + ((2.0 / classMultiplier) * Config.fuelCostMultiplier) - math.random(0, 100) / 100
+                    if Config.framework == "ESX" then
+                        local xPlayer = FRWORK.GetPlayerData() -- Obtén el jugador actual
+
+                        if xPlayer.money < cost then
+                            SendNUIMessage({
+                                type = "warn"
+                            })
+                            VehicleFueling = false
+                            break
+                        end
+                    elseif Config.framework == "QB" then
+                        local Player = FRWORK.Functions.GetPlayerData() -- Obtén los datos del jugador actual
+
+                        if Player.money.cash < cost then
+                            SendNUIMessage({
+                                type = "warn"
+                            })
+                            VehicleFueling = false
+                            break
+                        end
+
+                    end
+                    if fuel < 97 then
+                        SetFuel(VehicleFueling, fuel + ((2.0 / classMultiplier) - math.random(0, 100) / 100))
+                    else
+                        fuel = 100.0
+                        SetFuel(VehicleFueling, fuel)
+                        VehicleFueling = false
+                    end
+                    SendNUIMessage({
+                        type = "update",
+                        fuelCost = string.format("%.2f", cost),
+                        fuelTank = string.format("%.2f", fuel)
+                    })
+                    Wait(600)
+                end
+                if cost ~= 0 then
+                    TriggerServerEvent("dsco_fuel:pay", cost)
+                    cost = 0
+                end
+            end
+        end
+    end
+end)
+
+CreateThread(function()
+    while true do
+        Wait(500)
+        if WastingFuel then
+            local cost = 0
+            while WastingFuel do
+                cost = cost + (2.0 * Config.fuelCostMultiplier) - math.random(0, 100) / 100
+                SendNUIMessage({
+                    type = "update",
+                    fuelCost = string.format("%.2f", cost),
+                    fuelTank = "0.0"
+                })
+                if Config.framework == "ESX" then
+                    local xPlayer = FRWORK.GetPlayerData()
+                    if xPlayer.money < cost then 
+                        SendNUIMessage({
+                            type = "warn"
+                        })
+                    end
+                elseif Config.framework == "QB" then
+                    local Player = FRWORK.Functions.GetPlayerData()
+                    if Player.money.cash < cost then
+                        SendNUIMessage({
+                            type = "warn"
+                        })
+                    end
+                end
+                Wait(800)
+            end
+            if cost ~= 0 then
+                TriggerServerEvent("dsco_fuel:pay", cost)
+            end
+        end
+    end
+end)
+
+CreateThread(function()
+    local wait = 500
+    while true do
+        Wait(wait)
+        if pump then
+            wait = 0
+            if not HoldingNozzle and not NozzleInVehicle and not NozzleDropped then
+                local jerryCan = false
+                local ammo = GetAmmoInPedWeapon(ped, 883325847)
+                local weapon = HasPedGotWeapon(ped, 883325847)
+                local price = Config.jerryCanPrice
+                if not weapon then
+                    jerryCan = false
+                elseif weapon and GetSelectedPedWeapon(ped) == 883325847 and ammo < 4500 then
+                    price = math.floor(Config.jerryCanrefillCost - (Config.jerryCanrefillCost / (4500 / ammo)))
+                    jerryCan = true
+                end
+                DrawText3D(pump.x, pump.y, pump.z + 1.2, "Presiona [E] para interactuar")
+                if IsControlJustPressed(0, 38) then
+                    SendNUIMessage({
+                        type = "mainMenu",
+                        jerryCan = jerryCan,
+                        price = price
+                    })
+                    SetNuiFocus(true, true)
+                    Wait(1000)
+                    ClearPedTasks(ped)
+                end
+            elseif HoldingNozzle and not NearTank and pumpHandle == UsedPump then
+                DrawText3D(pump.x, pump.y, pump.z + 1.2, "Devolver manguera [E]")
+                if IsControlJustPressed(0, 51) then
+                    LoadAnimDict("anim@am_hold_up@male")
+                    TaskPlayAnim(ped, "anim@am_hold_up@male", "shoplift_high", 2.0, 8.0, -1, 50, 0, 0, 0, 0)
+                    Wait(300)
+                    ReturnNozzleToPump()
+                    Wait(1000)
+                    ClearPedTasks(ped)
+                end
+            end
+        else
+            wait = 500
+        end
+    end
+end)
+
+CreateThread(function()
+    local wait = 500
+    while true do
+        Wait(wait)
+        if HoldingNozzle or NozzleInVehicle or NozzleDropped then
+            wait = 0
+
+            -- drop the Nozzle and remove it if it's far away from the pump.
+            if pump then
+                pumpCoords = GetEntityCoords(UsedPump)
+            end
+            if Nozzle and pumpCoords then
+                nozzleLocation = GetEntityCoords(Nozzle)
+                if #(pumpCoords - pedCoords) < 3.0 then
+                    SendNUIMessage({
+                        type = "status",
+                        status = true
+                    })
+                else
+                    SendNUIMessage({
+                        type = "status",
+                        status = false
+                    })
+                end
+                if #(nozzleLocation - pumpCoords) > 6.0 then
+                    DropNozzle()
+                elseif #(pumpCoords - pedCoords) > 100.0 then
+                    ReturnNozzleToPump()
+                end
+                if NozzleDropped and #(nozzleLocation - pedCoords) < 1.5 then
+                    DrawText3D(nozzleLocation.x, nozzleLocation.y, nozzleLocation.z, "Agarrar manguera [E]")
+                    if IsControlJustPressed(0, 51) then
+                        LoadAnimDict("anim@mp_snowball")
+                        TaskPlayAnim(ped, "anim@mp_snowball", "pickup_snowball", 2.0, 8.0, -1, 50, 0, 0, 0, 0)
+                        Wait(700)
+                        GrabExistingNozzle()
+                        ClearPedTasks(ped)
+                    end
+                end
+            end
+
+            local veh = VehicleInFront()
+
+            -- Animations for manually fueling and effect for sparying fuel.
+            if HoldingNozzle and Nozzle then
+                DisableControlAction(0, 25, true)
+                DisableControlAction(0, 24, true)
+                if IsDisabledControlPressed(0, 24) then
+                    if veh and tankPosition and #(pedCoords - tankPosition) < 1.2 then
+                        if not IsEntityPlayingAnim(ped, "timetable@gardener@filling_can", "gar_ig_5_filling_can", 3) then
+                            LoadAnimDict("timetable@gardener@filling_can")
+                            TaskPlayAnim(ped, "timetable@gardener@filling_can", "gar_ig_5_filling_can", 2.0, 8.0, -1, 50, 0, 0, 0, 0)
+                        end
+                        WastingFuel = false
+                        VehicleFueling = veh
+                    else
+                        if IsEntityPlayingAnim(ped, "timetable@gardener@filling_can", "gar_ig_5_filling_can", 3) then
+                            VehicleFueling = false
+                            ClearPedTasks(ped)
+                        end
+                        if nozzleLocation then
+                            WastingFuel = true
+                            PlayEffect("core", "veh_trailer_petrol_spray")
+                        end
+                    end
+                else
+                    if IsEntityPlayingAnim(ped, "timetable@gardener@filling_can", "gar_ig_5_filling_can", 3) then
+                        VehicleFueling = false
+                        ClearPedTasks(ped)
+                    end
+                    WastingFuel = false
+                end
+            end
+
+            -- attaching and taking the Nozzle from the vehicle.
+            if veh then
+                local vehClass = GetVehicleClass(veh)
+                local zPos = NozzleBasedOnClass[vehClass + 1]
+                local isBike = false
+                local nozzleModifiedPosition = {
+                    x = 0.0,
+                    y = 0.0,
+                    z = 0.0
+                }
+                local textModifiedPosition = {
+                    x = 0.0,
+                    y = 0.0,
+                    z = 0.0
+                }
+                
+                if vehClass == 8 and vehClass ~= 13 and not Config.electricVehicles[GetHashKey(veh)] then
+                    local TankBone = GetEntityBoneIndexByName(veh, "petrolcap")
+                    if TankBone == -1 then
+                        TankBone = GetEntityBoneIndexByName(veh, "petroltank")
+                    end
+                    if TankBone == -1 then
+                        TankBone = GetEntityBoneIndexByName(veh, "engine")
+                    end
+                    isBike = true
+                elseif vehClass ~= 13 and not Config.electricVehicles[GetHashKey(veh)] then
+                    TankBone = GetEntityBoneIndexByName(veh, "petrolcap")
+                    if TankBone == -1 then
+                        TankBone = GetEntityBoneIndexByName(veh, "petroltank_l")
+                    end
+                    if TankBone == -1 then
+                        TankBone = GetEntityBoneIndexByName(veh, "hub_lr")
+                    end
+                    if TankBone == -1 then
+                        TankBone = GetEntityBoneIndexByName(veh, "handle_dside_r")
+                        nozzleModifiedPosition.x = 0.1
+                        nozzleModifiedPosition.y = -0.5
+                        nozzleModifiedPosition.z = -0.6
+                        textModifiedPosition.x = 0.55
+                        textModifiedPosition.y = 0.1
+                        textModifiedPosition.z = -0.2
+                    end
+                end
+                tankPosition = GetWorldPositionOfEntityBone(veh, TankBone)
+                if tankPosition and #(pedCoords - tankPosition) < 1.2 then
+                    if not NozzleInVehicle and HoldingNozzle then
+                        NearTank = true
+                        DrawText3D(tankPosition.x + textModifiedPosition.x, tankPosition.y + textModifiedPosition.y, tankPosition.z + zPos + textModifiedPosition.z, "Poner manguera [E]")
+                        if IsControlJustPressed(0, 51) then
+                            LoadAnimDict("timetable@gardener@filling_can")
+                            TaskPlayAnim(ped, "timetable@gardener@filling_can", "gar_ig_5_filling_can", 2.0, 8.0, -1, 50, 0, 0, 0, 0)
+                            Wait(300)
+                            PutNozzleInVehicle(veh, TankBone, isBike, true, nozzleModifiedPosition)
+                            Wait(300)
+                            ClearPedTasks(ped)
+                        end
+                    elseif NozzleInVehicle then
+                        DrawText3D(tankPosition.x + textModifiedPosition.x, tankPosition.y + textModifiedPosition.y, tankPosition.z + zPos + textModifiedPosition.z, "Agarrar manguera [E]")
+                        if IsControlJustPressed(0, 51) then
+                            LoadAnimDict("timetable@gardener@filling_can")
+                            TaskPlayAnim(ped, "timetable@gardener@filling_can", "gar_ig_5_filling_can", 2.0, 8.0, -1, 50, 0, 0, 0, 0)
+                            Wait(300)
+                            GrabExistingNozzle()
+                            Wait(300)
+                            ClearPedTasks(ped)
+                        end
+                    end 
+                end
+            else
+                NearTank = false
+            end
+        else
+            wait = 500
+        end
+    end
+end)

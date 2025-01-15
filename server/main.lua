@@ -1,12 +1,12 @@
-if config.framework == "ESX" then
+if Config.framework == "ESX" then
     FRWORK = exports["es_extended"]:getSharedObject()
-elseif config.framework == "QB" then
+elseif Config.framework == "QB" then
     FRWORK = exports['qb-core']:GetCoreObject()
 end
 
 RegisterNetEvent("dsco_fuel:pay", function(amount)
-    local moneyType = config.moneytype
-    if config.framework == "ESX" then
+    local moneyType = Config.moneytype
+    if Config.framework == "ESX" then
         local xPlayer = FRWORK.GetPlayerFromId(source)
         
         if xPlayer then
@@ -20,7 +20,7 @@ RegisterNetEvent("dsco_fuel:pay", function(amount)
 
             xPlayer.showNotification(msg)
         end
-    elseif config.framework == "QB" then
+    elseif Config.framework == "QB" then
         local Player = FRWORK.Functions.GetPlayer(source) -- Obtén al jugador actual
 
 if Player then
@@ -43,7 +43,7 @@ end
 end)
 
 RegisterNetEvent("dsco_fuel:jerryCan", function(amount)
-    if config.framework == "ESX" then
+    if Config.framework == "ESX" then
         local xPlayer = FRWORK.GetPlayerFromId(source)
 
         if xPlayer then
@@ -55,7 +55,7 @@ RegisterNetEvent("dsco_fuel:jerryCan", function(amount)
                 args = {"Éxito", "Pagado: $" .. amount .. " por gasolina."}
             })
         end
-    elseif config.framework == "QB" then
+    elseif Config.framework == "QB" then
         local Player = FRWORK.Functions.GetPlayer(source)
         if Player then
             Player.Functions.RemoveMoney("cash", amount)
@@ -69,14 +69,14 @@ RegisterNetEvent("dsco_fuel:jerryCan", function(amount)
 end)
 
 RegisterNetEvent("dsco_fuel:removeJerryCan", function()
-    if config.framework == "QB" then
+    if Config.framework == "QB" then
         local xPlayer = FRWORK.Functions.GetPlayer(source)
         if xPlayer then
             xPlayer.Functions.RemoveItem('WEAPON_PETROLCAN', 1)
             TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items['WEAPON_PETROLCAN'], "remove")
         end
     end
-    if config.framework == "ESX" then
+    if Config.framework == "ESX" then
         local xPlayer = FRWORK.GetPlayerFromId(source)
         if xPlayer then
             xPlayer.removeInventoryItem("WEAPON_PETROLCAN", 1)

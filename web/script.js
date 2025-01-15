@@ -46,6 +46,6 @@ document.getElementById("fuelButton")?.addEventListener("click", function() {
     $.post("https://dsco_fuel/fuel", JSON.stringify({}));
 });
 
-document.getElementById("exitButton")?.addEventListener("click", function() {
+document.getElementById("cancelButton")?.addEventListener("click", function() {
     $.post("https://dsco_fuel/exit", JSON.stringify({}));
 });
