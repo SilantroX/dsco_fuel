@@ -1,4 +1,5 @@
 Config = {
+    Lang = "es",
     framework = "QB", -- ESX or QB
     moneytype = "money",
     jerryCanPrice = 100, -- jery cans can be purchased from the gas statoin.

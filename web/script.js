@@ -19,7 +19,6 @@ window.addEventListener("message", function(event) {
 
         case "mainMenu":
             $(".mainMenu").fadeIn("fast");
-            $("#jerryButtonSpan").text(item.jerryCan ? translate.fillCan : translate.buyCan);
             break;
 
         case "close":
@@ -35,17 +34,27 @@ window.addEventListener("message", function(event) {
             $(".fuelCurrency").addClass("flashRed");
             setTimeout(() => $(".fuelCurrency").removeClass("flashRed"), 1000);
             break;
+
+        case "lang":
+            $("#jerryTranslate").text(item.translate.JerryCan);
+            $(".fuelPriceSpan").text(item.FuelPrice);
+            $("#titleTranslate").text(item.translate.Title);
+            $("#welcomeTranslate").text(item.translate.Welcome);
+            $("#pumpButtonSpan").text(item.translate.Fuel);
+            $("#closeButtonSpan").text(item.translate.Close);
+            $("#jerryButtonSpan").text(item.translate.JerryCanButton);
+            break;
     }
 });
 
 document.getElementById("jerryButton")?.addEventListener("click", function() {
-    $.post("https://dsco_fuel/jerrycan", JSON.stringify({}));
+    $.post(`https://${GetParentResourceName()}/jerrycan`, JSON.stringify({}));
 });
 
 document.getElementById("fuelButton")?.addEventListener("click", function() {
-    $.post("https://dsco_fuel/fuel", JSON.stringify({}));
+    $.post(`https://${GetParentResourceName()}/fuel`, JSON.stringify({}));
 });
 
 document.getElementById("cancelButton")?.addEventListener("click", function() {
-    $.post("https://dsco_fuel/exit", JSON.stringify({}));
+    $.post(`https://${GetParentResourceName()}/exit`, JSON.stringify({}));
 });
