@@ -22,6 +22,19 @@ CreateThread(
         while true do
             Wait(2000)
             if VehicleFueling then
+                local gettermoney = false
+                local playermoeny = 0
+                if Config.framework == "ESX" then
+                    FRWORK.TriggerServerCallback('dsco_fuel:getMoney', function(data)
+                        gettermoney = true
+                        playermoeny = data
+                    end)
+                else
+                    gettermoney = true
+                end
+                while not gettermoney do
+                    Citizen.Wait(5)
+                end
                 local classMultiplier = Config.vehicleClasses[GetVehicleClass(VehicleFueling)]
                 local cost = 0
                 while VehicleFueling do
@@ -35,7 +48,7 @@ CreateThread(
                     if Config.framework == "ESX" then
                         local xPlayer = FRWORK.GetPlayerData() -- Obtén el jugador actual
 
-                        if xPlayer.money < cost then
+                        if playermoeny < cost then
                             SendNUIMessage(
                                 {
                                     type = "warn"
@@ -87,6 +100,19 @@ CreateThread(
         while true do
             Wait(500)
             if WastingFuel then
+                local gettermoney = false
+                local playermoeny = 0
+                if Config.framework == "ESX" then
+                    FRWORK.TriggerServerCallback('dsco_fuel:getMoney', function(data)
+                        gettermoney = true
+                        playermoeny = data
+                    end)
+                else
+                    gettermoney = true
+                end
+                while not gettermoney do
+                    Citizen.Wait(5)
+                end
                 local cost = 0
                 while WastingFuel do
                     cost = cost + (2.0 * Config.fuelCostMultiplier) - math.random(0, 100) / 100
@@ -99,7 +125,7 @@ CreateThread(
                     )
                     if Config.framework == "ESX" then
                         local xPlayer = FRWORK.GetPlayerData()
-                        if xPlayer.money < cost then
+                        if playermoeny < cost then
                             SendNUIMessage(
                                 {
                                     type = "warn"
@@ -280,22 +306,35 @@ CreateThread(
                         end
                         isBike = true
                     elseif vehClass ~= 13 and not Config.electricVehicles[GetHashKey(veh)] then
-                        TankBone = GetEntityBoneIndexByName(veh, "petrolcap")
-                        if TankBone == -1 then
-                            TankBone = GetEntityBoneIndexByName(veh, "petroltank_l")
+                        local tankBone = GetEntityBoneIndexByName(veh, "petrolcap")
+                        if tankBone == -1 then
+                            tankBone = GetEntityBoneIndexByName(veh, "petroltank_l")
                         end
-                        if TankBone == -1 then
-                            TankBone = GetEntityBoneIndexByName(veh, "hub_lr")
+                        if tankBone == -1 then
+                            tankBone = GetEntityBoneIndexByName(veh, "petroltank_r")
                         end
-                        if TankBone == -1 then
-                            TankBone = GetEntityBoneIndexByName(veh, "handle_dside_r")
-                            nozzleModifiedPosition.x = 0.1
-                            nozzleModifiedPosition.y = -0.5
-                            nozzleModifiedPosition.z = -0.6
-                            textModifiedPosition.x = 0.55
-                            textModifiedPosition.y = 0.1
-                            textModifiedPosition.z = -0.2
+                        if tankBone == -1 then
+                            tankBone = GetEntityBoneIndexByName(veh, "hub_lr")
                         end
+                        if tankBone == -1 then
+                            tankBone = GetEntityBoneIndexByName(veh, "handle_dside_r")
+                        end
+                        if tankBone == -1 then
+                            tankBone = GetEntityBoneIndexByName(veh, "chassis")
+                        end
+
+                        if tankBone == -1 then
+                            tankBone = GetEntityBoneIndexByName(veh, "bodyshell")
+                            nozzleModifiedPosition = {x = -0.3, y = -0.5, z = -0.6}
+                            textModifiedPosition = {x = 0.5, y = 0.2, z = -0.2}
+                        else
+                            if tankBone == GetEntityBoneIndexByName(veh, "handle_dside_r") then
+                                nozzleModifiedPosition = {x = 0.1, y = -0.5, z = -0.6}
+                                textModifiedPosition = {x = 0.55, y = 0.1, z = -0.2}
+                            end
+                        end
+
+
                     end
                     tankPosition = GetWorldPositionOfEntityBone(veh, TankBone)
                     if tankPosition and #(pedCoords - tankPosition) < 1.2 then

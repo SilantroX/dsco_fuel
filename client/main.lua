@@ -39,6 +39,32 @@ NozzleBasedOnClass = {
 
 if Config.framework == "ESX" then
     FRWORK = exports["es_extended"]:getSharedObject()
+
+    FRWORK.Functions = {}
+    FRWORK.Functions.Progressbar = function(name, label, duration, useWhileDead, canCancel, disableControls, animation, prop, propTwo, onFinish, onCancel)
+        if GetResourceState('progressbar') ~= 'started' then error('progressbar needs to be started to work') end
+        exports['progressbar']:Progress({
+            name = name:lower(),
+            duration = duration,
+            label = label,
+            useWhileDead = useWhileDead,
+            canCancel = canCancel,
+            controlDisables = disableControls,
+            animation = animation,
+            prop = prop,
+            propTwo = propTwo,
+        }, function(cancelled)
+            if not cancelled then
+                if onFinish then
+                    onFinish()
+                end
+            else
+                if onCancel then
+                    onCancel()
+                end
+            end
+        end)
+    end
 elseif Config.framework == "QB" then
     FRWORK = exports["qb-core"]:GetCoreObject()
 end
@@ -48,21 +74,26 @@ for _, vehHash in pairs(Config.electricVehicles) do
 end
 
 -- Create blips for each gas station location.
-CreateThread(
-    function()
-        for _, coords in pairs(Config.blipLocations) do
-            local blip = AddBlipForCoord(coords)
-            SetBlipSprite(blip, 361)
-            SetBlipScale(blip, 0.9)
-            SetBlipColour(blip, 4)
-            SetBlipDisplay(blip, 4)
-            SetBlipAsShortRange(blip, true)
-            BeginTextCommandSetBlipName("STRING")
-            AddTextComponentString("Gasolinera")
-            EndTextCommandSetBlipName(blip)
-        end
+CreateThread(function()
+    if not Config.blipLocations or #Config.blipLocations == 0 then
+        print("No hay ubicaciones para los blips configuradas.")
+        return
     end
-)
+
+    for _, coords in pairs(Config.blipLocations) do
+        -- Asegúrate de que coords tiene x, y, z
+        local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
+        SetBlipSprite(blip, 361)
+        SetBlipScale(blip, 0.9)
+        SetBlipColour(blip, 4)
+        SetBlipDisplay(blip, 4)
+        SetBlipAsShortRange(blip, true)
+        BeginTextCommandSetBlipName("STRING")
+        AddTextComponentString("Gasolinera")
+        EndTextCommandSetBlipName(blip)
+    end
+end)
+
 
 -- vehicle fuel consumption.
 CreateThread(

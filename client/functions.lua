@@ -77,8 +77,7 @@ end
 function VehicleInFront()
     local entity = nil
     local offset = GetOffsetFromEntityInWorldCoords(ped, 0.0, 2.0, 0.0)
-    local rayHandle =
-        CastRayPointToPoint(pedCoords.x, pedCoords.y, pedCoords.z - 1.3, offset.x, offset.y, offset.z, 10, ped, 0)
+    local rayHandle = CastRayPointToPoint(pedCoords.x, pedCoords.y, pedCoords.z - 1.3, offset.x, offset.y, offset.z, 10, ped, 0)
     local A, B, C, D, entity = GetRaycastResult(rayHandle)
     if IsEntityAVehicle(entity) then
         return entity

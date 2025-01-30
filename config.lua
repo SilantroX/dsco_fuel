@@ -1,6 +1,6 @@
 Config = {
     Lang = "es",
-    framework = "QB", -- ESX or QB
+    framework = "ESX", -- ESX or QB
     moneytype = "money",
     jerryCanPrice = 100, -- jery cans can be purchased from the gas statoin.
     jerryCanrefillCost = 50, -- The price of the jerrycans refill, this will be calculated and adjusted to how much is left in it.
@@ -9,28 +9,28 @@ Config = {
 
     -- Class multipliers. If you want SUVs to use less fuel, you can change it to anything under 1.0, and vise versa.
     vehicleClasses = {
-        [0] = 0.1, -- Compacts
-        [1] = 0.2, -- Sedans
-        [2] = 0.3, -- SUVs
-        [3] = 0.4, -- Coupes
-        [4] = 0.5, -- Muscle
-        [5] = 0.6, -- Sports Classics
-        [6] = 0.7, -- Sports
-        [7] = 0.8, -- Super
-        [8] = 0.1, -- Motorcycles
-        [9] = 0.5, -- Off-road
-        [10] = 1.0, -- Industrial
-        [11] = 1.0, -- Utility
-        [12] = 0.6, -- Vans
+        [0] = 0.01, -- Compacts
+        [1] = 0.02, -- Sedans
+        [2] = 0.03, -- SUVs
+        [3] = 0.04, -- Coupes
+        [4] = 0.05, -- Muscle
+        [5] = 0.06, -- Sports Classics
+        [6] = 0.07, -- Sports
+        [7] = 0.08, -- Super
+        [8] = 0.01, -- Motorcycles
+        [9] = 0.05, -- Off-road
+        [10] = 0.09, -- Industrial
+        [11] = 0.09, -- Utility
+        [12] = 0.06, -- Vans
         [13] = 0.0, -- Cycles
         [14] = 0.0, -- Boats
         [15] = 0.0, -- Helicopters
         [16] = 0.0, -- Planes
-        [17] = 0.5, -- Service
-        [18] = 0.5, -- Emergency
-        [19] = 0.9, -- Military
-        [20] = 0.9, -- Commercial
-        [21] = 1.0, -- Trains
+        [17] = 0.05, -- Service
+        [18] = 0.05, -- Emergency
+        [19] = 0.09, -- Military
+        [20] = 0.09, -- Commercial
+        [21] = 0.09, -- Trains
     },
 
     electricVehicles = {

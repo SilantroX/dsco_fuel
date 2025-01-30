@@ -1,5 +1,16 @@
 if Config.framework == "ESX" then
     FRWORK = exports["es_extended"]:getSharedObject()
+    FRWORK.RegisterServerCallback('dsco_fuel:getMoney', function(source, cb)
+        local xPlayer = FRWORK.GetPlayerFromId(source)
+        if xPlayer then
+            cb(xPlayer.getAccount(Config.moneytype).money)
+        end
+    end)
+
+    ESX.RegisterUsableItem('jerry_can', function(playerId)
+        local src = playerId
+        TriggerClientEvent("dsco_fuel:client:UseJerrycan", src)
+      end)
 elseif Config.framework == "QB" then
     FRWORK = exports["qb-core"]:GetCoreObject()
 
