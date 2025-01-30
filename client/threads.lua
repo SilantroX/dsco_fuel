@@ -327,17 +327,19 @@ CreateThread(
                             tankBone = GetEntityBoneIndexByName(veh, "bodyshell")
                             nozzleModifiedPosition = {x = -0.3, y = -0.5, z = -0.6}
                             textModifiedPosition = {x = 0.5, y = 0.2, z = -0.2}
+                            tankPosition = GetEntityForwardVector(veh)
+                            
                         else
                             if tankBone == GetEntityBoneIndexByName(veh, "handle_dside_r") then
                                 nozzleModifiedPosition = {x = 0.1, y = -0.5, z = -0.6}
                                 textModifiedPosition = {x = 0.55, y = 0.1, z = -0.2}
                             end
+                            tankPosition = GetWorldPositionOfEntityBone(veh, TankBone)
                         end
 
-
                     end
-                    tankPosition = GetWorldPositionOfEntityBone(veh, TankBone)
-                    if tankPosition and #(pedCoords - tankPosition) < 1.2 then
+                    
+                    if tankPosition and #(pedCoords - tankPosition) < 3.0 then
                         if not NozzleInVehicle and HoldingNozzle then
                             NearTank = true
                             DrawText3D(

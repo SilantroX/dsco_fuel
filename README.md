@@ -1,32 +1,37 @@
-<p align='center'><b><a href="https://www.youtube.com/watch?v=tQ0cL9qGqbA">Video de Vista Previa</a></b>
+# dsco_fuel
 
-## Características Destacadas:
-* Boquilla y manguera
-* Interfaz de bomba
-* Personalización del consumo de combustible
-* Compra y recarga de bidones
+## Preview
 
+![Preview Image](path/to/preview.png)
 
-## ¿Necesitas ayuda?
-https://discord.gg/5UUJ2ffVY4
+## Discord
 
-<a href="https://www.youtube.com/watch?v=tQ0cL9qGqbA"><img src="https://cdn.discordapp.com/attachments/1143757665374318752/1157084152949125280/SPOILER_image.png" /></a>
+Join our Discord community for support and updates: [Discord Link](https://discord.gg/yourdiscordlink)
+
+## Tebex
+
+Support the project by purchasing on Tebex: [Tebex Link](https://yourtebexlink.com)
+
+## License
+
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
 
 ---
 
-## Modificado por:
-DSCO Network
+# dsco_fuel
 
-## Créditos al Creador Original:
-Este proyecto se basa en [ND_Fuel](https://github.com/ND-Framework/ND_Fuel), creado por [ND-Framework].
+## Vista previa
 
-DSCO Network ha realizado modificaciones en este proyecto. Asegúrate de visitar el enlace del creador original para obtener la versión original y brindarle el crédito que se merece.
+![Imagen de vista previa](path/to/preview.png)
 
-## Cambios Realizados:
-- Convertido a esx Y qbcore
+## Discord
 
-## Código Fuente:
-El código fuente correspondiente a esta versión se encuentra disponible en este repositorio.
+Únete a nuestra comunidad de Discord para soporte y actualizaciones: [Enlace de Discord](https://discord.gg/yourdiscordlink)
+
+## Tebex
+
+Apoya el proyecto comprando en Tebex: [Enlace de Tebex](https://yourtebexlink.com)
 
 ## Licencia
-Este proyecto se encuentra bajo la [Licencia Pública General de GNU (GPL) Versión 3.0](https://www.gnu.org/licenses/gpl-3.0.html). Puedes encontrar más detalles en el archivo [LICENSE](license) dentro de este repositorio.
+
+Este proyecto está licenciado bajo la Licencia Pública General de GNU v3.0. Consulta el archivo [LICENSE](LICENSE) para más detalles.
