@@ -1,21 +1,39 @@
-author "Andyyy#7666, N1K0#0001, DSCO-Network"
-description "ESX/QB fuel with hose & nozle"
-version "1.1.0"
-
 fx_version "cerulean"
 game "gta5"
-lua54 "yes"
+
+author "DSCO-Network (Forked from Andyyy#7666, N1K0#0001)"
+description "ESX/QB fuel with hose & nozle"
+version "2.0.0"
+use_experimental_fxv2_oal 'yes'
+lua54 'yes'
+
 
 files {
-    "source/digital-counter-7.ttf",
-"source/index.html"
+    "web/*.*"
 }
-ui_page "source/index.html"
 
-shared_script "config.lua"
+ui_page "web/index.html"
+
+shared_scripts {
+    "config.lua",
+    "locales/*.lua"
+}
+
 server_scripts {
-    "source/server.lua"
+    "server/*.lua"
 }
 client_scripts {
-    "source/client.lua"
+    "client/main.lua",
+    "client/*.lua",
+    "client/compat/*.lua"
+}
+
+exports {
+	'GetFuel',
+	'SetFuel'
+}
+
+provides {
+    'LegacyFuel',
+    'ND_Fuel'
 }

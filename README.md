@@ -1,34 +1,41 @@
-<p align='center'><b><a href="https://www.youtube.com/watch?v=tQ0cL9qGqbA">Video de Vista Previa</a></b>
+# dsco_fuel  
 
-## Características Destacadas:
-* Boquilla y manguera
-* Interfaz de bomba
-* Personalización del consumo de combustible
-* Compra y recarga de bidones
+## 🌟 Preview / Vista previa  
+
+![Preview Image / Imagen de vista previa](preview.png) 
+[Preview Video / Video de Previsualización](https://streamable.com/c8zixn)
+
+## 🚀 Features / Características  
+
+- 🔥 **Realistic fuel system** with dynamic consumption. / **Sistema de combustible realista** con consumo dinámico.  
+- 🎨 **Modern UI** for a better user experience. / **Interfaz moderna** e intuitiva para una mejor experiencia de usuario.  
+- 🔄 **Compatibility with** `LegacyFuel` and `ND_Fuel` via *exports*. / **Compatibilidad con** `LegacyFuel` y `ND_Fuel` a través de *exports*.  
+- 🎭 **Realistic animations and props**, enhancing game immersion. / **Animaciones y props realistas**, mejorando la inmersión en el juego.  
+- 🛠️ **Fully compatible with** `ESX` and `QBCore`. / **Totalmente compatible con** `ESX` y `QBCore`.  
+
+## 📌 Compatibility / Compatibilidad  
+
+| Framework  | Support / Soporte |
+|------------|------------------|
+| ESX        | ✅ Yes / Sí      |
+| QBCore     | ✅ Yes / Sí      |
+| LegacyFuel | ✅ Yes (exports) / Sí (exports) |
+| ND_Fuel    | ✅ Yes (exports) / Sí (exports) |
+
+## 📢 Community & Support / Comunidad y soporte  
+
+Join our community for support, suggestions, and updates:  
+🔗 **Discord:** [Discord Link / Enlace de Discord](https://discord.gg/H4A38em9CR)  
+
+Únete a nuestra comunidad para soporte, sugerencias y actualizaciones:  
+🔗 **Discord:** [Enlace de Discord / Discord Link](https://discord.gg/H4A38em9CR)  
 
 
-## ¿Necesitas ayuda?
-https://discord.gg/5UUJ2ffVY4
 
-<a href="https://www.youtube.com/watch?v=tQ0cL9qGqbA"><img src="https://cdn.discordapp.com/attachments/1143757665374318752/1157084152949125280/SPOILER_image.png" /></a>
+## 📜 License / Licencia  
 
----
+This project is licensed under the **GNU General Public License v3.0**.  
+See the [LICENSE](LICENSE) file for details.  
 
-## Modificado por:
-DSCO Network
-
-## Créditos al Creador Original:
-Este proyecto se basa en [ND_Fuel](https://github.com/ND-Framework/ND_Fuel), creado por [ND-Framework].
-
-DSCO Network ha realizado modificaciones en este proyecto. Asegúrate de visitar el enlace del creador original para obtener la versión original y brindarle el crédito que se merece.
-
-## Cambios Realizados:
-- Convertido a esx Y qbcore
-
-## Código Fuente:
-El código fuente correspondiente a esta versión se encuentra disponible en este repositorio.
-
-## Licencia
-Este proyecto se encuentra bajo la [Licencia Pública General de GNU (GPL) Versión 3.0](https://www.gnu.org/licenses/gpl-3.0.html). Puedes encontrar más detalles en el archivo [LICENSE](license) dentro de este repositorio.
-
-**Nota:** En lugar de crear un nuevo repositorio, hemos realizado cambios en el proyecto original utilizando la función de "fork" disponible en GitHub, lo que simplifica el cumplimiento de las licencias de código abierto y mantiene un linaje claro del proyecto.
+Este proyecto está licenciado bajo la **Licencia Pública General de GNU v3.0**.  
+Consulta el archivo [LICENSE](LICENSE) para más detalles.  
