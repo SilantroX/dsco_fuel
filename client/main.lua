@@ -11,31 +11,7 @@ WastingFuel = false
 UsingCan = false
 NearTank = false
 
--- Nozzle Z position based on vehicle class.
-NozzleBasedOnClass = {
-    0.65, -- Compacts
-    0.65, -- Sedans
-    0.85, -- SUVs
-    0.6, -- Coupes
-    0.55, -- Muscle
-    0.6, -- Sports Classics
-    0.6, -- Sports
-    0.55, -- Super
-    0.12, -- Motorcycles
-    0.8, -- Off-road
-    0.7, -- Industrial
-    0.6, -- Utility
-    0.7, -- Vans
-    0.0, -- Cycles
-    0.0, -- Boats
-    0.0, -- Helicopters
-    0.0, -- Planes
-    0.6, -- Service
-    0.65, -- Emergency
-    0.65, -- Military
-    0.75, -- Commercial
-    0.0 -- Trains
-}
+
 
 if Config.framework == "ESX" then
     FRWORK = exports["es_extended"]:getSharedObject()
@@ -181,7 +157,7 @@ AddEventHandler(
                 {},
                 function()
                     -- Done
-                    AddFuelToVehicle(curVeh, vehicleFuel + 100.0)
+                    SetFuel(curVeh, 100)
                     FRWORK.Functions.Notify(Lang.JerryCanSucess, "success")
                     TriggerServerEvent("dsco_fuel:removeJerryCan")
                     TriggerServerEvent("dsco_fuel:JerryCanprop", "remove")

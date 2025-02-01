@@ -3,6 +3,35 @@ pedCoords = nil
 pump = nil
 pumpHandle = nil
 veh = nil
+NozzleBasedOnClass = {
+    0.65, -- Compacts
+    0.65, -- Sedans
+    0.85, -- SUVs
+    0.6, -- Coupes
+    0.55, -- Muscle
+    0.6, -- Sports Classics
+    0.6, -- Sports
+    0.55, -- Super
+    0.12, -- Motorcycles
+    0.8, -- Off-road
+    0.7, -- Industrial
+    0.6, -- Utility
+    0.7, -- Vans
+    0.0, -- Cycles
+    0.0, -- Boats
+    0.0, -- Helicopters
+    0.0, -- Planes
+    0.6, -- Service
+    0.65, -- Emergency
+    0.65, -- Military
+    0.75, -- Commercial
+    0.0 -- Trains
+}
+
+local playermoeny = 0
+function SetPlayerMoneyESX(data)
+    playermoeny = data
+end
 
 CreateThread(
     function()
@@ -22,19 +51,6 @@ CreateThread(
         while true do
             Wait(2000)
             if VehicleFueling then
-                local gettermoney = false
-                local playermoeny = 0
-                if Config.framework == "ESX" then
-                    FRWORK.TriggerServerCallback('dsco_fuel:getMoney', function(data)
-                        gettermoney = true
-                        playermoeny = data
-                    end)
-                else
-                    gettermoney = true
-                end
-                while not gettermoney do
-                    Citizen.Wait(5)
-                end
                 local classMultiplier = Config.vehicleClasses[GetVehicleClass(VehicleFueling)]
                 local cost = 0
                 while VehicleFueling do
@@ -71,9 +87,9 @@ CreateThread(
                         end
                     end
                     if fuel < 80 then
-                        SetFuel(VehicleFueling, fuel + ((2.0 / classMultiplier) - math.random(0, 100) / 100))
+                        SetFuel(VehicleFueling, fuel + math.random(30,40) / 2)
                     else
-                        fuel = 100.0
+                        fuel = 100
                         SetFuel(VehicleFueling, fuel)
                         VehicleFueling = false
                     end
@@ -295,51 +311,61 @@ CreateThread(
                         y = 0.0,
                         z = 0.0
                     }
+                    local tankPosition = nil
+                    local TankBone = nil
 
                     if vehClass == 8 and vehClass ~= 13 and not Config.electricVehicles[GetHashKey(veh)] then
-                        local TankBone = GetEntityBoneIndexByName(veh, "petrolcap")
+                        TankBone = GetEntityBoneIndexByName(veh, "petrolcap")
                         if TankBone == -1 then
                             TankBone = GetEntityBoneIndexByName(veh, "petroltank")
                         end
                         if TankBone == -1 then
+                            TankBone = GetEntityBoneIndexByName(veh, "fuel")
+                        end
+                        if TankBone == -1 then
+                            TankBone = GetEntityBoneIndexByName(veh, "seat_r")
+                        end
+                        if TankBone == -1 then
                             TankBone = GetEntityBoneIndexByName(veh, "engine")
+                        end
+                        if TankBone == -1 then
+                            TankBone = GetEntityBoneIndexByName(veh, "misc_a")
+                        end
+                        if TankBone == -1 then
+                            TankBone = GetEntityBoneIndexByName(veh, "misc_b")
                         end
                         isBike = true
                     elseif vehClass ~= 13 and not Config.electricVehicles[GetHashKey(veh)] then
-                        local tankBone = GetEntityBoneIndexByName(veh, "petrolcap")
-                        if tankBone == -1 then
-                            tankBone = GetEntityBoneIndexByName(veh, "petroltank_l")
+                        TankBone = GetEntityBoneIndexByName(veh, "petrolcap")
+                        if TankBone == -1 then
+                            TankBone = GetEntityBoneIndexByName(veh, "petroltank_l")
                         end
-                        if tankBone == -1 then
-                            tankBone = GetEntityBoneIndexByName(veh, "petroltank_r")
+                        if TankBone == -1 then
+                            TankBone = GetEntityBoneIndexByName(veh, "petroltank_r")
                         end
-                        if tankBone == -1 then
-                            tankBone = GetEntityBoneIndexByName(veh, "hub_lr")
+                        if TankBone == -1 then
+                            TankBone = GetEntityBoneIndexByName(veh, "hub_lr")
                         end
-                        if tankBone == -1 then
-                            tankBone = GetEntityBoneIndexByName(veh, "handle_dside_r")
+                        if TankBone == -1 then
+                            TankBone = GetEntityBoneIndexByName(veh, "handle_dside_r")
                         end
-                        if tankBone == -1 then
-                            tankBone = GetEntityBoneIndexByName(veh, "chassis")
+                        if TankBone == -1 then
+                            TankBone = GetEntityBoneIndexByName(veh, "chassis")
                         end
-
-                        if tankBone == -1 then
-                            tankBone = GetEntityBoneIndexByName(veh, "bodyshell")
+                        
+                        if TankBone == -1 then
+                            TankBone = GetEntityBoneIndexByName(veh, "bodyshell")
                             nozzleModifiedPosition = {x = -0.3, y = -0.5, z = -0.6}
                             textModifiedPosition = {x = 0.5, y = 0.2, z = -0.2}
-                            tankPosition = GetEntityForwardVector(veh)
-                            
                         else
-                            if tankBone == GetEntityBoneIndexByName(veh, "handle_dside_r") then
+                            if TankBone == GetEntityBoneIndexByName(veh, "handle_dside_r") then
                                 nozzleModifiedPosition = {x = 0.1, y = -0.5, z = -0.6}
                                 textModifiedPosition = {x = 0.55, y = 0.1, z = -0.2}
                             end
-                            tankPosition = GetWorldPositionOfEntityBone(veh, TankBone)
                         end
-
                     end
-                    
-                    if tankPosition and #(pedCoords - tankPosition) < 3.0 then
+                    tankPosition = GetWorldPositionOfEntityBone(veh, TankBone)
+                    if tankPosition and #(pedCoords - tankPosition) < 2.5 then
                         if not NozzleInVehicle and HoldingNozzle then
                             NearTank = true
                             DrawText3D(
@@ -406,3 +432,4 @@ CreateThread(
         end
     end
 )
+

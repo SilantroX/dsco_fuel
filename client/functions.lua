@@ -87,75 +87,88 @@ end
 function GrabNozzleFromPump()
     LoadAnimDict("anim@am_hold_up@male")
     TaskPlayAnim(ped, "anim@am_hold_up@male", "shoplift_high", 2.0, 8.0, -1, 50, 0, 0, 0, 0)
-    Wait(300)
+    Wait(500)
+
+    -- Verificar que ped es válido
+    if not DoesEntityExist(ped) or IsEntityDead(ped) then
+        print("Error: ped no válido")
+        return
+    end
+
+    -- Crear la manguera
+    RequestModel("prop_cs_fuel_nozle")
+    while not HasModelLoaded("prop_cs_fuel_nozle") do
+        Wait(10)
+    end
     Nozzle = CreateObject("prop_cs_fuel_nozle", 0, 0, 0, true, true, true)
-    AttachEntityToEntity(
-        Nozzle,
-        ped,
-        GetPedBoneIndex(ped, 0x49D9),
-        0.11,
-        0.02,
-        0.02,
-        -80.0,
-        -90.0,
-        15.0,
-        true,
-        true,
-        false,
-        true,
-        1,
-        true
-    )
+    SetModelAsNoLongerNeeded("prop_cs_fuel_nozle")
+
+    -- Verificar si el nozzle se creó correctamente
+    if not DoesEntityExist(Nozzle) then
+        print("Error: Nozzle no se pudo crear")
+        return
+    end
+
+    -- Adjuntar la manguera a la mano
+    AttachEntityToEntity(Nozzle, ped, GetPedBoneIndex(ped, 0x49D9), 0.11, 0.02, 0.02, -80.0, -90.0, 15.0, true, true, false, true, 1, true)
+
+    -- Cargar texturas de la cuerda con un pequeño delay extra
     RopeLoadTextures()
     while not RopeAreTexturesLoaded() do
         Wait(0)
     end
-    while not pump do
-        Wait(0)
+    Wait(100)
+
+    -- Validar que el surtidor existe antes de crear la cuerda
+    if not pump or not pump.x or not pump.y or not pump.z then
+        print("Error: Datos del pump no válidos")
+        return
     end
+
+    if not DoesEntityExist(pumpHandle) then
+        print("Error: pumpHandle no existe")
+        return
+    end
+
+    -- Crear la cuerda
     Rope = AddRope(pump.x, pump.y, pump.z, 0.0, 0.0, 0.0, 3.0, 1, 1000.0, 0.0, 1.0, false, false, false, 1.0, true)
-    while not Rope do
-        Wait(0)
+
+    -- Verificar si la cuerda se creó correctamente
+    if not Rope or Rope == 0 then
+        print("Error: No se pudo crear la cuerda")
+        return
     end
+
     ActivatePhysics(Rope)
     Wait(50)
-    local nozzlePos = GetEntityCoords(Nozzle)
-    nozzlePos = GetOffsetFromEntityInWorldCoords(Nozzle, 0.0, -0.033, -0.195)
-    AttachEntitiesToRope(
-        Rope,
-        pumpHandle,
-        Nozzle,
-        pump.x,
-        pump.y,
-        pump.z + 1.45,
-        nozzlePos.x,
-        nozzlePos.y,
-        nozzlePos.z,
-        5.0,
-        false,
-        false,
-        nil,
-        nil
-    )
+
+    -- Verificar que el Nozzle existe antes de adjuntar la cuerda
+    if not DoesEntityExist(Nozzle) then
+        print("Error: Nozzle no existe antes de adjuntar a la cuerda")
+        return
+    end
+
+    -- Obtener la posición del nozzle
+    local nozzlePos = GetOffsetFromEntityInWorldCoords(Nozzle, 0.0, -0.033, -0.195)
+
+    -- Depuración: imprimir coordenadas antes de adjuntar
+    print("Adjuntando cuerda desde", pump.x, pump.y, pump.z + 1.45, "hasta", nozzlePos.x, nozzlePos.y, nozzlePos.z)
+
+    -- Adjuntar la cuerda entre el surtidor y la manguera
+    AttachEntitiesToRope(Rope, pumpHandle, Nozzle, pump.x, pump.y, pump.z + 1.45, nozzlePos.x, nozzlePos.y, nozzlePos.z, 5.0, false, false, nil, nil)
+
+    -- Variables de control
     NozzleDropped = false
     HoldingNozzle = true
     NozzleInVehicle = false
     VehicleFueling = false
     UsedPump = pumpHandle
-    SendNUIMessage(
-        {
-            type = "status",
-            status = true
-        }
-    )
-    SendNUIMessage(
-        {
-            type = "update",
-            fuelCost = "0.00",
-            fuelTank = "0.00"
-        }
-    )
+
+    -- Enviar actualización a la UI
+    SendNUIMessage({ type = "status", status = true })
+    SendNUIMessage({ type = "update", fuelCost = "0.00", fuelTank = "0.00" })
 end
+
 
 function GrabExistingNozzle()
     AttachEntityToEntity(

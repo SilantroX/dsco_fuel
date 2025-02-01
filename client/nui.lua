@@ -39,8 +39,14 @@ RegisterNUICallback(
                 type = "close"
             }
         )
+        
         GrabNozzleFromPump()
         SetNuiFocus(false, false)
         cb("ok")
+        if Config.framework == "ESX" then
+            FRWORK.TriggerServerCallback('dsco_fuel:getMoney', function(data)
+                SetPlayerMoneyESX(data)
+            end)
+        end
     end
 )
