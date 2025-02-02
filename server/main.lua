@@ -7,7 +7,7 @@ if Config.framework == "ESX" then
         end
     end)
 
-    ESX.RegisterUsableItem('jerry_can', function(playerId)
+    FRWORK.RegisterUsableItem('jerry_can', function(playerId)
         local src = playerId
         TriggerClientEvent("dsco_fuel:client:UseJerrycan", src)
       end)
