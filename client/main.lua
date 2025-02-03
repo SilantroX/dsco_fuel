@@ -41,6 +41,8 @@ if Config.framework == "ESX" then
             end
         end)
     end
+    FRWORK.Functions.GetClosestVehicle = FRWORK.Game.GetClosestVehicle
+    FRWORK.Functions.Notify = FRWORK.ShowNotification
 elseif Config.framework == "QB" then
     FRWORK = exports["qb-core"]:GetCoreObject()
 end
@@ -139,7 +141,6 @@ AddEventHandler(
             TriggerServerEvent("dsco_fuel:JerryCanprop", "add")
             Wait(500)
             FuelingAnimation()
-            TriggerEvent("cxc:displayItems", false)
             FRWORK.Functions.Progressbar(
                 "refueling_veh",
                 Lang.ProgressJerryCan,

@@ -143,3 +143,11 @@ body {
     animation-name: warn;
     animation-duration: 4s;
 }
+@media screen and (max-width: 1600px) and (max-height: 900px) {
+    .mainMenu h1 {
+        font-size: 3.5em;
+    }
+    .mainMenu p {
+        font-size: 1em;
+    }
+}
